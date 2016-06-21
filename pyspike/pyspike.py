@@ -7,7 +7,7 @@ Created on Thu Oct 29 17:05:54 2015
 
 import numpy as np
 from copy import copy
-from npyhfo import DataObj,EventList,Timer
+from npyhfo import DataObj,Timer
 from read_header import read_header
 import os
 import matlab.engine
@@ -103,12 +103,12 @@ def loadITANfolder(folder,save_folder = None,q=25):
         eng.save_NEX(sample_rate,labels,int(time_vec[0]),save_file,nargout=0)
         for f in files['adc']:
             sys.stdout.flush()
-            with Timer(f):  
+            with Timer.Timer(f):  
                 labels.append(f[:-4])
                 aux_data = openDATfile(folder+f,'adc',sample_rate)
                 data[:,count] = sig.decimate(aux_data,q)
                 count +=1
-        Data = DataObj(data,sample_rate/q,amp_unit,labels,time_vec,[])
+        Data = DataObj.DataObj(data,sample_rate/q,amp_unit,labels,time_vec,[])
     Data.save(folder+'downsampled.h5','data')
     eng.quit()    
     return Data
