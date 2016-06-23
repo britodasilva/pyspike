@@ -62,7 +62,7 @@ def openDATfile(filename,ftype,srate=25000):
         data /= srate # according the Intan, the output should be multiplied by 0.195 to be converted to micro-volts
     return data
 
-def loadITANfolder(folder,save_folder = None,q=25):
+def loadITANfolder(folder,save_folder = None,q=25,overwrite=False):
     with Timer.Timer(folder):
         if type(save_folder) is 'NoneType':
            save_folder = folder  
@@ -92,8 +92,9 @@ def loadITANfolder(folder,save_folder = None,q=25):
                 aux_data = openDATfile(folder+f,'amp',sample_rate)
                 data[:,count] = sig.decimate(aux_data,q)
                 count +=1
-                if os.path.isfile(folder+name+'.mat'):
-                    continue
+                if not overwrite:
+                    if os.path.isfile(folder+name+'.mat'):
+                        continue
                 tfile = open(folder + 'Files.txt', 'w')
                 tfile.write(name +'\n')
                 tfile.close()
